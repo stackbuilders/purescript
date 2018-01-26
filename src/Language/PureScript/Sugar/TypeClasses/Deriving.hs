@@ -670,10 +670,9 @@ objectType (TypeApp (TypeConstructor (Qualified (Just (ModuleName [ProperName "P
 objectType _ = Nothing
 
 decomposeRec :: Type -> Maybe [(Label, Type)]
-decomposeRec = fmap (sortBy (comparing fst)) . go
-  where go (RCons str typ typs) = fmap ((str, typ) :) (go typs)
-        go REmpty = Just []
-        go _ = Nothing
+decomposeRec (RCons str typ typs) = fmap ((str, typ) :) (decomposeRec typs)
+decomposeRec REmpty = Just []
+decomposeRec _ = Nothing
 
 decomposeRec' :: Type -> [(Label, Type)]
 decomposeRec' = sortBy (comparing fst) . go
